@@ -10,6 +10,7 @@ const movieCtrl = require('./controllers/moviesController')
 
 app.use(express.json())
 
+
 /**
  * ! MASSIVE AND QUERIES TODOS
  * TODO: Set up heroku db/.env
@@ -53,4 +54,14 @@ app.delete('/auth/logout', authCtrl.logout)
 //! Seeding endpoint.  Keep at bottom.
 app.post('/api', setup.seed)
 
-app.listen(SERVER_PORT, () => console.log(`Get it on port ${SERVER_PORT}`))
+massive({
+     connectionString: CONNECTION_STRING,
+     ssl: {
+         rejectUnauthorized: false
+     }
+}).then(db => {
+    app.set('db', db)
+    console.log("Database is connected-You rock Ben!")
+    app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`))
+}).catch(error => console.log(error))
+
