@@ -1,10 +1,19 @@
 module.exports = {
   getAllMovies: async (req, res) => {
     const db = req.app.get("db");
+    const {rating, year} = req.query
 
     const movies = await db.movies.find();
 
-    res.status(200).send(movies);
+    if(rating) {
+      const filteredMovies = movies.filter.filter((movie) => {
+        return movie.rating > +rating
+      })
+      res.status(200).send(filteredMovies);
+    }else {
+      res.status(200).send(movies)
+    }
+
   },
 
   getMovieById: async (req, res) => {
